@@ -64,19 +64,29 @@
 	<script type="text/javascript" src="three.min.js"></script>
 	<script type="text/javascript" src="js/Detector.js"></script>
 	<script type="text/javascript" src="js/controls/OrbitControls.js"></script>
-	<script type="text/javascript" src="orbitAjax.js"></script>
 	<script type="text/javascript" src="https://www.google.com/jsapi"></script>
 	<script type="text/javascript">
 	google.load("jquery", "1.4.0");
 	</script>
 	<script>
 	
-		function threeStart(domId) {
-			var ajax;
-			ajax = new OrbitAjax('json/orbit.json');
+		var orbitData = null;
+		var index = 0;
 
-			ajax.updated = function(data){}
-			ajax.init();
+		var callback = function(json)
+		{
+			orbitData = json;
+		}
+	
+		function threeStart(domId) {
+			
+			function load(src)
+			{
+				var script = document.createElement('script');
+				script.src = src;
+				document.body.appendChild(script);
+			}
+			load('http://tsujimotter.info/webgl/orbitjsonp.cgi');
 
 
 			if(!Detector.webgl) Detector.addGetWebGLMessage();
@@ -158,13 +168,18 @@
 				document.getElementById('clock').innerHTML = str;
 
 
-				if( ajax.hasUpdated() ){
+				if( orbitData != null ){
 
-					if( (date-prevDate) > 1000.0*ajax.getIntervalMinutes() ){
+					if( (date-prevDate) > 1000.0*orbitData.intervalMinutes ){
 
 						prevDate = date;
 
-						var orbit = ajax.nextOrbit();
+						var num = parseInt(orbitData.dataNum);
+						var cIndex = index;
+						index = (index+1)%num;
+
+						var orbit = orbitData.orbits[cIndex];
+
 						if( orbit != null ){
 							//document.getElementById('content').innerHTML 
 							//	= '<p>lat: '+orbit.latitude+', lng: '+orbit.longitude+'</p>';
@@ -172,24 +187,29 @@
 							lat = parseFloat(orbit.longitude);
 
 							var str = "";
-							str += '<p>'+ajax.getSateliteName()+' ';
+							str += '<p>'+orbitData.sateliteName+' ';
 							str += '[latitude: '+lat.toFixed(6)+', longitude: '+lng.toFixed(6)+'] </p>';
 							document.getElementById('satelite').innerHTML = str;
 						}
 					}
 
+					var obTheta = (90.0-lat) * 2.0 * Math.PI / 360.0; 
+					var obPhi   = (lng) * 2.0 * Math.PI / 360.0; 
+					var radius  = 1.05;
+	 
+					cube.position.set(
+						radius*Math.sin(obTheta)*Math.cos(-theta-obPhi),
+						radius*Math.cos(obTheta),
+						radius*Math.sin(obTheta)*Math.sin(-theta-obPhi)
+					);
+
+				}
+				else {
+					cube.position.set(0.0, 0.0, 0.0);
+
 				}
 
-				var obTheta = (90.0-lat) * 2.0 * Math.PI / 360.0; 
-				var obPhi   = (lng) * 2.0 * Math.PI / 360.0; 
-				var radius  = 1.05;
-	 
-				cube.position.set(
-					radius*Math.sin(obTheta)*Math.cos(-theta-obPhi),
-					radius*Math.cos(obTheta),
-					radius*Math.sin(obTheta)*Math.sin(-theta-obPhi)
-				);
-
+				
 
 				renderer.clear();  
 				renderer.render(scene, camera);
