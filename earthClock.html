@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="UTF-8">
+		<title>地球時計</title>
+	<style type="text/css">
+		body {
+			background-color: #000000;
+		}
+		div#canvas-frame {
+			border: none;
+			cursor: pointer;
+			width: 720px;
+			height: 420px;
+			margin-left: auto;
+			margin-right: auto;		
+		}
+		div#header {
+			margin: 0px 0px 0px 20px;
+		}
+		div#header h1 {
+			margin: 0;
+			color: #bbbbbb;
+			font-size: 2.5em;
+			font-family: 'Arial black', Verdana, Helvetica,
+			sans-serif;
+			text-shadow: 5px 5px 5px #666666;
+		}
+		div#header p {
+			color: #999999;
+			font-size: 0.7em;
+		}
+		div#clock {
+			margin-left: auto;
+			margin-right: auto;
+			width: 540px;
+		}
+		div#clock h1 {
+			color: #bbbbbb;
+			font-size: 1.2em;
+			font-family: 'Arial black', Verdana, Helvetica,
+			sans-serif;
+			text-shadow: 5px 5px 5px #666666;			
+		}
+		div#satelite {
+			margin-left: auto;
+			margin-right: auto;
+			width: 540px;
+		}
+		div#satelite p {
+			color: #999999;
+			font-size: 0.8em;			
+		}
+		div#footer {
+			margin:0px 20px 0px 20px;
+			color: #999999;
+			font-size: 0.7em;
+		}
+		div#footer a:link { color: #9400d3; }
+		div#footer a:visited { color: #800080; }
+		div#footer a:hover { color: #9400d3; }
+		div#footer a:active { color: #9400d3; }
+	</style>
+	<script type="text/javascript" src="three.min.js"></script>
+	<script type="text/javascript" src="js/Detector.js"></script>
+	<script type="text/javascript" src="js/controls/OrbitControls.js"></script>
+	<script type="text/javascript" src="orbitAjax.js"></script>
+	<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+	<script type="text/javascript">
+	google.load("jquery", "1.4.0");
+	</script>
+	<script>
+	
+		function threeStart(domId) {
+			var ajax;
+			ajax = new OrbitAjax('json/orbit.json');
+
+			ajax.updated = function(data){}
+			ajax.init();
+
+
+			if(!Detector.webgl) Detector.addGetWebGLMessage();
+
+			var glframe = document.getElementById(domId);
+
+			var width = glframe.clientWidth;
+			var height = glframe.clientHeight;  
+
+			var renderer;
+			renderer = new THREE.WebGLRenderer({ antialias:true });
+			renderer.setSize(width, height);
+			renderer.setClearColorHex(0x000000, 1);
+			glframe.appendChild(renderer.domElement);
+
+			var scene;
+			scene = new THREE.Scene();
+
+			var camera;
+			camera = new THREE.PerspectiveCamera(
+				15, width / height);
+			camera.position = new THREE.Vector3(0, 0, 8);
+			camera.lookAt(new THREE.Vector3(0, 0, 0));
+			scene.add(camera);
+
+			var light;
+			light = new THREE.DirectionalLight(0xcccccc);
+			//light.position = new THREE.Vector3(0.577, 0.577, 0.577);
+			light.position = new THREE.Vector3(0, 0, 100);
+			//var ambient = new THREE.AmbientLight(0x333333);
+			scene.add(light);
+			//scene.add(ambient);
+
+// /*
+			cube = new THREE.Mesh(
+         		new THREE.CubeGeometry(0.02,0.02,0.02),                //形状の設定
+         		new THREE.MeshLambertMaterial({color: 0xff0000}) //材質の設定
+			);
+
+			scene.add(cube);
+			//cube.position.set(1.0,0,0);
+// */
+// /*
+			var geometry = new THREE.SphereGeometry(1, 32, 16);
+			var material = new THREE.MeshPhongMaterial({
+				color: 0xffffff, specular: 0xcccccc, shininess:50, ambient: 0xffffff,
+				map: THREE.ImageUtils.loadTexture('images/earth.jpg') });
+			var mesh = new THREE.Mesh(geometry, material);
+			scene.add(mesh);
+// */
+			// カメラコントロールを作成
+			var controls
+			controls = new THREE.OrbitControls(camera, glframe);
+			controls.center = new THREE.Vector3(0, 0, 0);
+
+			var baseTime = +new Date(2012, 1, 1, 0, 0, 0);
+
+
+			var prevDate = +new Date();
+
+			var lng = 0.0;
+			var lat = 0.0;
+
+			function render() {
+				requestAnimationFrame(render);
+
+				// カメラの状態を更新
+				controls.update();
+
+				var date = new Date();
+
+				//mesh.rotation.y = 0.3 * (+date - baseTime) / 1000;
+				var theta = (+date - baseTime) * 2.0*Math.PI / (60*1000);
+				mesh.rotation.y = theta;
+				//cube.rotation.y = (+date - baseTime) * 2.0*3.14159265 / (60*1000);
+
+
+				var str  = '<h1>'+date+'</h1>';
+				document.getElementById('clock').innerHTML = str;
+
+
+				if( ajax.hasUpdated() ){
+
+					if( (date-prevDate) > 1000.0*ajax.getIntervalMinutes() ){
+
+						prevDate = date;
+
+						var orbit = ajax.nextOrbit();
+						if( orbit != null ){
+							//document.getElementById('content').innerHTML 
+							//	= '<p>lat: '+orbit.latitude+', lng: '+orbit.longitude+'</p>';
+							lng = parseFloat(orbit.latitude);
+							lat = parseFloat(orbit.longitude);
+
+							var str = "";
+							str += '<p>'+ajax.getSateliteName()+' ';
+							str += '[latitude: '+lat.toFixed(6)+', longitude: '+lng.toFixed(6)+'] </p>';
+							document.getElementById('satelite').innerHTML = str;
+						}
+					}
+
+				}
+
+				var obTheta = (90.0-lat) * 2.0 * Math.PI / 360.0; 
+				var obPhi   = (lng) * 2.0 * Math.PI / 360.0; 
+				var radius  = 1.05;
+	 
+				cube.position.set(
+					radius*Math.sin(obTheta)*Math.cos(-theta-obPhi),
+					radius*Math.cos(obTheta),
+					radius*Math.sin(obTheta)*Math.sin(-theta-obPhi)
+				);
+
+
+				renderer.clear();  
+				renderer.render(scene, camera);
+				
+			};
+			render();
+
+			glframe.addEventListener('resize', function() {
+				renderer.setSize(width, height);
+				camera.aspect = width / height;
+				camera.updateProjectionMatrix();
+			}, false );
+		}
+	</script>
+</head>
+<body style="margin:0; overflow:hidden;" onload="threeStart('canvas-frame');">
+
+<div id="header">
+	<h1>地球時計</h1>
+	<p>一分に一回転する地球儀です。マウスクリックやホイールで視点の位置を変えられます。（ブラウザはChrome推奨。）</p>
+</div>
+<div id="clock"></div>
+<div id="satelite"></div>
+<div id="canvas-frame"></div>
+
+<div id="footer">
+	<p>衛星の座標は適当です。本物とは一致しません。ISSの情報が知りたい方は<a href="http://kibo.tksc.jaxa.jp/">JAXAのページ</a>へ。<p>
+	<p>参考WebサイトURL：Webグラフィックをハックする（5）多彩な表現力のWebGLを扱いやすくする「Three.js」,  
+		<a href="http://www.atmarkit.co.jp/fwcr/design/benkyo/webgraphics05/01.html">http://www.atmarkit.co.jp/fwcr/design/benkyo/webgraphics05/01.html</a>
+	</p>
+	<p>テクスチャ画像素材: Tom Patterson, <a href="http://www.shadedrelief.com">www.shadedrelief.com</a></p>
+	<p>制作: Junpei Tsuji (twitter: <a href="https://twitter.com/tsujimotter">@tsujimotter</a>)</p>
+</div>
+</body>
+</html>
