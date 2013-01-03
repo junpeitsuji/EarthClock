@@ -1,0 +1,81 @@
+body {
+	background-color: #000000;
+}
+div#header {
+	margin:40px 0px 0px 200px;
+	width: 720px;	
+}
+div#header h1 {
+	margin:0px 0px 0px 0px;
+	color: #bbbbbb;
+	font-size: 2.8em;
+	font-family: 'Arial black', Verdana, Helvetica,
+	sans-serif;
+	text-shadow: 5px 5px 5px #666666;			
+}
+div#header p {
+	color: #999999;
+	font-size: 0.7em;
+}
+
+div#content {
+	margin:0px 0px 0px 200px;
+}
+
+div#left-top {
+	margin: 10px 10px 10px 10px;
+	float: left;
+}
+
+.box {
+	display: block;
+	text-align: center;
+	width: 280px;
+	height: 180px;
+	filter:  progid:DXImageTransform.Microsoft.gradient(GradientType=0, StartColorStr='#c99410', EndColorStr='#966409');
+	background-image: -webkit-gradient(linear, left top, left bottom, from(#c99410), to(#966409));
+	background-image: -moz-linear-gradient(top, #c99410, #966409);
+	background-image: linear-gradient(top, #c99410, #966409);
+	padding: 1px; 
+}
+
+.box .canvas {
+	cursor: pointer;
+	display: block;
+	width: 280px;
+	height: 180px;
+	background: #000000;
+}
+
+.box .canvas img {
+	height: 180px;
+}
+
+
+div#right-top {
+	margin: 10px 10px 10px 10px;
+	float: left;
+}
+
+div#left-bottom {
+	clear: both;
+	margin: 10px 10px 10px 10px;
+	float: left;
+}
+
+div#right-bottom {
+	margin: 10px 10px 10px 10px;
+	float: left;
+}
+
+div#footer {
+	margin:30px 20px 0px 200px;
+	color: #999999;
+	font-size: 0.6em;
+
+	clear: both;
+}
+div#footer a:link { color: #9400d3; }
+div#footer a:visited { color: #800080; }
+div#footer a:hover { color: #9400d3; }
+div#footer a:active { color: #9400d3; }

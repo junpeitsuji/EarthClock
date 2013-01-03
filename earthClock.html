@@ -18,7 +18,7 @@
 
 		function threeStart(domId) {
 
-			var url = 'http://tsujimotter.info/webgl/orbitjsonp.cgi?callback=?'
+			var url = 'http://tsujimotter.info/iss/orbitjsonp.cgi?callback=?'
 
 			$.getJSON(url,
 				function(data) { 
@@ -134,21 +134,6 @@
 							document.getElementById('satelite').innerHTML = str;
 						}
 
-						if( index > num ){
-							/*
-							dataFlag = false;
-							orbitData = null;
-							index = 0;
-
-							$.getJSON(url,
-								function(json) { 
-									orbitData = json;
-									dataFlag = true;
-							    }
-							);
-							*/
-							window.location.reload();
-						}
 					}
 
 					var obTheta = (90.0-lat) * 2.0 * Math.PI / 360.0; 
@@ -167,6 +152,21 @@
 
 				}
 
+				if( index > num ){
+					/*
+					dataFlag = false;
+					orbitData = null;
+					index = 0;
+
+					$.getJSON(url,
+						function(json) { 
+							orbitData = json;
+							dataFlag = true;
+					    }
+					);
+					*/
+					window.location.reload();
+				}
 				
 
 				renderer.clear();  
