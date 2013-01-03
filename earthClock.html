@@ -3,71 +3,13 @@
 <head>
 	<meta charset="UTF-8">
 		<title>地球時計</title>
-	<style type="text/css">
-	/* <!-- */
-		body {
-			background-color: #000000;
-		}
-		div#canvas-frame {
-			border: none;
-			cursor: pointer;
-			width: 720px;
-			height: 420px;
-			margin-left: auto;
-			margin-right: auto;		
-		}
-		div#header {
-			margin: 0px 0px 0px 20px;
-		}
-		div#header h1 {
-			margin: 0;
-			color: #bbbbbb;
-			font-size: 1.8em;
-			font-family: 'Arial black', Verdana, Helvetica,
-			sans-serif;
-			text-shadow: 5px 5px 5px #666666;
-		}
-		div#header p {
-			color: #999999;
-			font-size: 0.7em;
-		}
-		div#clock {
-			margin-left: auto;
-			margin-right: auto;
-			width: 720px;
-		}
-		div#clock h1 {
-			color: #bbbbbb;
-			font-size: 1.6em;
-			font-family: 'Arial black', Verdana, Helvetica,
-			sans-serif;
-			text-shadow: 5px 5px 5px #666666;			
-		}
-		div#satelite {
-			margin-left: auto;
-			margin-right: auto;
-			width: 540px;
-		}
-		div#satelite p {
-			color: #cc0033;
-			font-size: 0.8em;			
-		}
-		div#footer {
-			margin:0px 20px 0px 20px;
-			color: #999999;
-			font-size: 0.6em;
-		}
-		div#footer a:link { color: #9400d3; }
-		div#footer a:visited { color: #800080; }
-		div#footer a:hover { color: #9400d3; }
-		div#footer a:active { color: #9400d3; }
-	/* --> */
-	</style>
+
+	<link rel="stylesheet" type="text/css" href="css/clock.css">
+
 	<script type="text/javascript" src="three.min.js"></script>
 	<script type="text/javascript" src="js/Detector.js"></script>
 	<script type="text/javascript" src="js/controls/OrbitControls.js"></script>
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
-
 	<script>
 	// <!--	
 		var orbitData = null;
