@@ -64,10 +64,6 @@
 	<script type="text/javascript" src="three.min.js"></script>
 	<script type="text/javascript" src="js/Detector.js"></script>
 	<script type="text/javascript" src="js/controls/OrbitControls.js"></script>
-	<script type="text/javascript" src="https://www.google.com/jsapi"></script>
-	<script type="text/javascript">
-	google.load("jquery", "1.4.0");
-	</script>
 	<script>
 	
 		var orbitData = null;
@@ -87,6 +83,7 @@
 				document.body.appendChild(script);
 			}
 			load('http://tsujimotter.info/webgl/orbitjsonp.cgi');
+			//load('http://tsujimotter.info/tests/jsonp.js');
 
 
 			if(!Detector.webgl) Detector.addGetWebGLMessage();
@@ -142,7 +139,7 @@
 			controls = new THREE.OrbitControls(camera, glframe);
 			controls.center = new THREE.Vector3(0, 0, 0);
 
-			var baseTime = +new Date(2012, 1, 1, 0, 0, 0);
+			var baseTime = +new Date(2011, 12, 31, 3, 0, 0);
 
 
 			var prevDate = +new Date();
@@ -159,7 +156,7 @@
 				var date = new Date();
 
 				//mesh.rotation.y = 0.3 * (+date - baseTime) / 1000;
-				var theta = (+date - baseTime) * 2.0*Math.PI / (60*1000);
+				var theta = (+date - baseTime) * 2.0*Math.PI / (24*60*60*1000);
 				mesh.rotation.y = theta;
 				//cube.rotation.y = (+date - baseTime) * 2.0*3.14159265 / (60*1000);
 
@@ -170,26 +167,37 @@
 
 				if( orbitData != null ){
 
-					if( (date-prevDate) > 1000.0*orbitData.intervalMinutes ){
+					var orbit = orbitData.orbits[index];
+
+					var dataTime = Date.parse(orbit.date);
+					var currentTime = date.getTime();
+
+					if( currentTime > dataTime ){
 
 						prevDate = date;
 
 						var num = parseInt(orbitData.dataNum);
-						var cIndex = index;
-						index = (index+1)%num;
-
-						var orbit = orbitData.orbits[cIndex];
+						//index = (index+1)%num;
+						index = index + 1; 
 
 						if( orbit != null ){
 							//document.getElementById('content').innerHTML 
 							//	= '<p>lat: '+orbit.latitude+', lng: '+orbit.longitude+'</p>';
-							lng = parseFloat(orbit.latitude);
-							lat = parseFloat(orbit.longitude);
+							date = orbit.date;
+							lng  = parseFloat(orbit.latitude);
+							lat  = parseFloat(orbit.longitude);
 
 							var str = "";
 							str += '<p>'+orbitData.sateliteName+' ';
-							str += '[latitude: '+lat.toFixed(6)+', longitude: '+lng.toFixed(6)+'] </p>';
+							str += '[date: '+date+', latitude: '+lat.toFixed(6)+', longitude: '+lng.toFixed(6)+'] </p>';
 							document.getElementById('satelite').innerHTML = str;
+						}
+
+						if( index > num ){
+							orbitData = null;
+							load('http://tsujimotter.info/webgl/orbitjsonp.cgi');
+							index = 0;
+
 						}
 					}
 
@@ -229,7 +237,7 @@
 
 <div id="header">
 	<h1>地球時計</h1>
-	<p>一分に一回転する地球儀です。マウスクリックやホイールで視点の位置を変えられます。（ブラウザはChrome推奨。）</p>
+	<p>一日に一回転する地球儀です。マウスクリックやホイールで視点の位置を変えられます。（ブラウザはChrome推奨。）</p>
 </div>
 <div id="clock"></div>
 <div id="satelite"></div>
