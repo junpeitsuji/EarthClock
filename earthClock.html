@@ -4,6 +4,7 @@
 	<meta charset="UTF-8">
 		<title>地球時計</title>
 	<style type="text/css">
+	/* <!-- */
 		body {
 			background-color: #000000;
 		}
@@ -21,7 +22,7 @@
 		div#header h1 {
 			margin: 0;
 			color: #bbbbbb;
-			font-size: 2.5em;
+			font-size: 1.8em;
 			font-family: 'Arial black', Verdana, Helvetica,
 			sans-serif;
 			text-shadow: 5px 5px 5px #666666;
@@ -33,11 +34,11 @@
 		div#clock {
 			margin-left: auto;
 			margin-right: auto;
-			width: 540px;
+			width: 720px;
 		}
 		div#clock h1 {
 			color: #bbbbbb;
-			font-size: 1.2em;
+			font-size: 1.6em;
 			font-family: 'Arial black', Verdana, Helvetica,
 			sans-serif;
 			text-shadow: 5px 5px 5px #666666;			
@@ -48,18 +49,19 @@
 			width: 540px;
 		}
 		div#satelite p {
-			color: #999999;
+			color: #cc0033;
 			font-size: 0.8em;			
 		}
 		div#footer {
 			margin:0px 20px 0px 20px;
 			color: #999999;
-			font-size: 0.7em;
+			font-size: 0.6em;
 		}
 		div#footer a:link { color: #9400d3; }
 		div#footer a:visited { color: #800080; }
 		div#footer a:hover { color: #9400d3; }
 		div#footer a:active { color: #9400d3; }
+	/* --> */
 	</style>
 	<script type="text/javascript" src="three.min.js"></script>
 	<script type="text/javascript" src="js/Detector.js"></script>
@@ -67,35 +69,19 @@
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
 
 	<script>
-	
+	// <!--	
 		var orbitData = null;
 		var index = 0;
+		//var dataFlag = false;
 
-/*
-		var jsonp = function(json)
-		{
-			orbitData = json;
-		}
-*/
-/*
-		var jsonp = function(data) { 
-					orbitData = data;
-		}
-*/	
 		function threeStart(domId) {
-			/*
-			function load(src)
-			{
-				var script = document.createElement('script');
-				script.src = src;
-				document.body.appendChild(script);
-			}
-			load('http://tsujimotter.info/webgl/orbitjsonp.cgi?callback=jsonp');
-			*/
+
 			var url = 'http://tsujimotter.info/webgl/orbitjsonp.cgi?callback=?'
+
 			$.getJSON(url,
 				function(data) { 
 					orbitData = data;
+					//dataFlag = true;
 				}
 			);
 
@@ -132,8 +118,8 @@
 
 // /*
 			cube = new THREE.Mesh(
-         		new THREE.CubeGeometry(0.02,0.02,0.02),                //形状の設定
-         		new THREE.MeshLambertMaterial({color: 0xff0000}) //材質の設定
+         		new THREE.CubeGeometry(0.02,0.02,0.02),          // shapes
+         		new THREE.MeshLambertMaterial({color: 0xff0000}) // materials
 			);
 
 			scene.add(cube);
@@ -147,7 +133,7 @@
 			var mesh = new THREE.Mesh(geometry, material);
 			scene.add(mesh);
 // */
-			// カメラコントロールを作成
+			// create a camera control object
 			var controls
 			controls = new THREE.OrbitControls(camera, glframe);
 			controls.center = new THREE.Vector3(0, 0, 0);
@@ -163,7 +149,7 @@
 			function render() {
 				requestAnimationFrame(render);
 
-				// カメラの状態を更新
+				// update camera state
 				controls.update();
 
 				var date = new Date();
@@ -207,16 +193,19 @@
 						}
 
 						if( index > num ){
+							/*
+							dataFlag = false;
 							orbitData = null;
 							index = 0;
-							/*
-							load('http://tsujimotter.info/webgl/orbitjsonp.cgi?callback=jsonp');
-							*/
+
 							$.getJSON(url,
-								function(data) { 
-									orbitData = data;
+								function(json) { 
+									orbitData = json;
+									dataFlag = true;
 							    }
 							);
+							*/
+							window.location.reload();
 						}
 					}
 
@@ -250,6 +239,7 @@
 				camera.updateProjectionMatrix();
 			}, false );
 		}
+	// -->
 	</script>
 </head>
 <body style="margin:0; overflow:hidden;" onload="threeStart('canvas-frame');">
@@ -263,7 +253,7 @@
 <div id="canvas-frame"></div>
 
 <div id="footer">
-	<p>衛星の座標は<a href="http://spaceflight.nasa.gov/realdata/elements/index.html">spaceflight.nasa.gov</a>より取得したTLEに基づいてGP4によって計算されています。TLEの情報は最新とは限らないため、実際の座標と一致することを保証するものではありません。<p>
+	<p>衛星の座標は<a href="http://spaceflight.nasa.gov/realdata/elements/index.html">spaceflight.nasa.gov</a>より取得したTLEに基づいてSGP4によって計算されています(データ取得APIは<a href="http://tsujimotter.info/webgl/orbitjsonp.cgi?callback=jsonp.handler">こちら</a>)。TLEの情報は最新とは限らないため、実際の座標と一致することを保証するものではありません。<p>
 	<p>参考WebサイトURL：Webグラフィックをハックする（5）多彩な表現力のWebGLを扱いやすくする「Three.js」,  
 		<a href="http://www.atmarkit.co.jp/fwcr/design/benkyo/webgraphics05/01.html">http://www.atmarkit.co.jp/fwcr/design/benkyo/webgraphics05/01.html</a>
 	</p>
