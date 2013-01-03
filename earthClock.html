@@ -152,7 +152,10 @@
 
 				}
 
-				if( index > num ){
+				if( index > num-1 ){
+
+					orbitData = null;
+
 					/*
 					dataFlag = false;
 					orbitData = null;
@@ -187,7 +190,7 @@
 <body style="margin:0; overflow:hidden;" onload="threeStart('canvas-frame');">
 
 <div id="header">
-	<h1>地球時計</h1>
+	<h1><a href="./index.html">地球時計</a></h1>
 	<p>一日に一回転する地球儀です。マウスクリックやホイールで視点の位置を変えられます。（ブラウザはChrome推奨。）</p>
 </div>
 <div id="clock"></div>
