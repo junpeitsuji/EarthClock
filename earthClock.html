@@ -18,6 +18,10 @@
 
 		function threeStart(domId) {
 
+			orbitData = null;
+			index = 0;
+		
+
 			var url = 'http://tsujimotter.info/iss/orbitjsonp.cgi?callback=?'
 
 			$.getJSON(url,
@@ -110,28 +114,33 @@
 
 					var orbit = orbitData.orbits[index];
 
-					var dataTime = Date.parse(orbit.date);
-					var currentTime = date.getTime();
+					if(orbit != null && orbit.date != null)
+					{
 
-					if( currentTime > dataTime ){
+						var dataTime = Date.parse(orbit.date);
+						var currentTime = date.getTime();
 
-						prevDate = date;
+						if( currentTime > dataTime ){
 
-						var num = parseInt(orbitData.dataNum);
-						//index = (index+1)%num;
-						index = index + 1; 
+							prevDate = date;
 
-						if( orbit != null ){
-							//document.getElementById('content').innerHTML 
-							//	= '<p>lat: '+orbit.latitude+', lng: '+orbit.longitude+'</p>';
-							date = orbit.date;
-							lat  = parseFloat(orbit.latitude);
-							lng  = parseFloat(orbit.longitude);
+							var num = parseInt(orbitData.dataNum);
+							//index = (index+1)%num;
+							index = index + 1; 
 
-							var str = "";
-							str += '<p>'+orbitData.sateliteName+' ';
-							str += '[date: '+date+', latitude: '+lat.toFixed(6)+', longitude: '+lng.toFixed(6)+'] </p>';
-							document.getElementById('satelite').innerHTML = str;
+							if( orbit != null ){
+								//document.getElementById('content').innerHTML 
+								//	= '<p>lat: '+orbit.latitude+', lng: '+orbit.longitude+'</p>';
+								date = orbit.date;
+								lat  = parseFloat(orbit.latitude);
+								lng  = parseFloat(orbit.longitude);
+
+								var str = "";
+								str += '<p>'+orbitData.sateliteName+' ';
+								str += '[date: '+date+', latitude: '+lat.toFixed(6)+', longitude: '+lng.toFixed(6)+'] </p>';
+								document.getElementById('satelite').innerHTML = str;
+							}
+
 						}
 
 					}
