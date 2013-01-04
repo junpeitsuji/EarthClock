@@ -58,18 +58,11 @@
 			light = new THREE.DirectionalLight(0xcccccc);
 			//light.position = new THREE.Vector3(0.577, 0.577, 0.577);
 			light.position = new THREE.Vector3(0, 0, 100);
-			//var ambient = new THREE.AmbientLight(0x333333);
+			var ambient = new THREE.AmbientLight(0x111111);
 			scene.add(light);
-			//scene.add(ambient);
+			scene.add(ambient);
 
 // /*
-			cube = new THREE.Mesh(
-         		new THREE.CubeGeometry(0.02,0.02,0.02),          // shapes
-         		new THREE.MeshLambertMaterial({color: 0xff0000}) // materials
-			);
-
-			scene.add(cube);
-			//cube.position.set(1.0,0,0);
 // */
 // /*
 			var geometry = new THREE.SphereGeometry(1, 32, 16);
@@ -79,6 +72,8 @@
 			var mesh = new THREE.Mesh(geometry, material);
 			scene.add(mesh);
 // */
+
+
 			// create a camera control object
 			var controls
 			controls = new THREE.OrbitControls(camera, glframe);
@@ -91,6 +86,9 @@
 
 			var lng = 0.0;
 			var lat = 0.0;
+
+			var cube = null;			
+			var lines = null;
 
 			function render() {
 				requestAnimationFrame(render);
@@ -108,6 +106,12 @@
 
 				var str  = '<h1>'+date+'</h1>';
 				document.getElementById('clock').innerHTML = str;
+
+				//scene = new THREE.Scene();
+				//scene.add(camera);
+				//scene.add(light);
+				//scene.add(cube);
+				//scene.add(mesh);
 
 
 				if( orbitData != null ){
@@ -145,19 +149,69 @@
 
 					}
 
-					var obTheta = (90.0-lat) * 2.0 * Math.PI / 360.0; 
-					var obPhi   = (lng) * 2.0 * Math.PI / 360.0; 
-					var radius  = 1.05;
-	 
-					cube.position.set(
-						radius*Math.sin(obTheta)*Math.cos(-theta-obPhi),
-						radius*Math.cos(obTheta),
-						radius*Math.sin(obTheta)*Math.sin(-theta-obPhi)
-					);
+// /*
+//if( orbitData != null ){
+	
 
+					var lineGeometry = new THREE.Geometry();
+					for (var i=0; i<orbitData.orbits.length; i++) 
+					{
+
+						//if( orbitData != null ){
+
+							var lat_i = parseFloat(orbitData.orbits[i].latitude);
+							var lng_i = parseFloat(orbitData.orbits[i].longitude);
+
+							var obTheta = (90.0-lat_i) * 2.0 * Math.PI / 360.0; 
+							var obPhi   = (lng_i) * 2.0 * Math.PI / 360.0; 
+							var radius  = 1.05;
+			 
+
+							lineGeometry.vertices.push( new THREE.Vector3( 
+								radius*Math.sin(obTheta)*Math.cos(-theta-obPhi),
+								radius*Math.cos(obTheta),
+								radius*Math.sin(obTheta)*Math.sin(-theta-obPhi)
+							));
+						//}
+
+					}
+
+		
+					if( lines != null )
+					{
+						scene.remove( lines );
+					
+					}
+ 					lines = new THREE.Line( lineGeometry, new THREE.LineBasicMaterial( { color: 0xff6666, opacity: 0.5 } ) );
+					scene.add( lines );
+//}
+
+// */
+					if( cube != null )
+					{
+						scene.remove( cube );
+					
+					}
+					cube = new THREE.Mesh(
+    		     		new THREE.CubeGeometry(0.03,0.03,0.03),          // shapes
+        		 		new THREE.MeshLambertMaterial({color: 0xff0000}) // materials
+					);
+					scene.add(cube);
+
+					{
+						var obTheta = (90.0-lat) * 2.0 * Math.PI / 360.0; 
+						var obPhi   = (lng) * 2.0 * Math.PI / 360.0; 
+						var radius  = 1.05;
+		 
+						cube.position.set(
+							radius*Math.sin(obTheta)*Math.cos(-theta-obPhi),
+							radius*Math.cos(obTheta),
+							radius*Math.sin(obTheta)*Math.sin(-theta-obPhi)
+						);						
+					}
 				}
 				else {
-					cube.position.set(0.0, 0.0, 0.0);
+					//cube.position.set(0.0, 0.0, 0.0);
 
 				}
 
