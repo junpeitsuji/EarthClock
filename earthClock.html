@@ -79,16 +79,18 @@
 			controls = new THREE.OrbitControls(camera, glframe);
 			controls.center = new THREE.Vector3(0, 0, 0);
 
-			var baseTime = +new Date(2011, 12, 31, 3, 0, 0);
+			var baseTime = +new Date(2011, 12, 31, 2, 0, 0);
 
 
 			var prevDate = +new Date();
 
 			var lng = 0.0;
 			var lat = 0.0;
+			var alt = 0.0;
 
 			var cube = null;			
 			var lines = null;
+
 
 			function render() {
 				requestAnimationFrame(render);
@@ -106,12 +108,6 @@
 
 				var str  = '<h1>'+date+'</h1>';
 				document.getElementById('clock').innerHTML = str;
-
-				//scene = new THREE.Scene();
-				//scene.add(camera);
-				//scene.add(light);
-				//scene.add(cube);
-				//scene.add(mesh);
 
 
 				if( orbitData != null ){
@@ -138,11 +134,22 @@
 								date = orbit.date;
 								lat  = parseFloat(orbit.latitude);
 								lng  = parseFloat(orbit.longitude);
+								alt  = parseFloat(orbit.altitude);
 
 								var str = "";
 								str += '<p>'+orbitData.sateliteName+' ';
-								str += '[date: '+date+', latitude: '+lat.toFixed(6)+', longitude: '+lng.toFixed(6)+'] </p>';
+								str += '[date: '+date+', latitude: '+lat.toFixed(6)+', longitude: '+lng.toFixed(6)+', altitude: '+alt.toFixed(6)+'] </p>';
 								document.getElementById('satelite').innerHTML = str;
+							}
+
+							if( cube == null )
+							{
+								//scene.remove( cube );
+								cube = new THREE.Mesh(
+			    		     		new THREE.CubeGeometry(0.03,0.03,0.03),          // shapes
+			        		 		new THREE.MeshLambertMaterial({color: 0xff0000}) // materials
+								);
+								scene.add(cube);
 							}
 
 						}
@@ -150,87 +157,58 @@
 					}
 
 // /*
-//if( orbitData != null ){
-	
+					if( orbitData != null ){
+						if( lines == null ){
 
-					var lineGeometry = new THREE.Geometry();
-					for (var i=0; i<orbitData.orbits.length; i++) 
-					{
+							var lineGeometry = new THREE.Geometry();
+							for (var i=0; i<orbitData.orbits.length; i++) 
+							{
 
-						//if( orbitData != null ){
+								var lat_i = parseFloat(orbitData.orbits[i].latitude);
+								var lng_i = parseFloat(orbitData.orbits[i].longitude);
+								var alt_i = parseFloat(orbitData.orbits[i].altitude);
 
-							var lat_i = parseFloat(orbitData.orbits[i].latitude);
-							var lng_i = parseFloat(orbitData.orbits[i].longitude);
+								var obTheta = (90.0-lat_i) * 2.0 * Math.PI / 360.0; 
+								var obPhi   = (lng_i) * 2.0 * Math.PI / 360.0; 
+								var radius  = (alt_i + 6378.137) / 6378.137;
+				 				
+								lineGeometry.vertices.push( new THREE.Vector3( 
+									radius*Math.sin(obTheta)*Math.cos(-obPhi),
+									radius*Math.cos(obTheta),
+									radius*Math.sin(obTheta)*Math.sin(-obPhi)
+								));
 
-							var obTheta = (90.0-lat_i) * 2.0 * Math.PI / 360.0; 
-							var obPhi   = (lng_i) * 2.0 * Math.PI / 360.0; 
-							var radius  = 1.05;
-			 
-
-							lineGeometry.vertices.push( new THREE.Vector3( 
-								radius*Math.sin(obTheta)*Math.cos(-theta-obPhi),
-								radius*Math.cos(obTheta),
-								radius*Math.sin(obTheta)*Math.sin(-theta-obPhi)
-							));
-						//}
-
+							}
+							
+		 					lines = new THREE.Line( lineGeometry, new THREE.LineBasicMaterial( { color: 0xff6666, opacity: 0.5 } ) );
+							scene.add( lines );
+		// */
+						}
+						
+						if( lines != null ) {
+							lines.rotation.y = theta;
+						}
 					}
-
-		
-					if( lines != null )
-					{
-						scene.remove( lines );
-					
-					}
- 					lines = new THREE.Line( lineGeometry, new THREE.LineBasicMaterial( { color: 0xff6666, opacity: 0.5 } ) );
-					scene.add( lines );
-//}
 
 // */
-					if( cube != null )
-					{
-						scene.remove( cube );
-					
-					}
-					cube = new THREE.Mesh(
-    		     		new THREE.CubeGeometry(0.03,0.03,0.03),          // shapes
-        		 		new THREE.MeshLambertMaterial({color: 0xff0000}) // materials
-					);
-					scene.add(cube);
 
 					{
 						var obTheta = (90.0-lat) * 2.0 * Math.PI / 360.0; 
 						var obPhi   = (lng) * 2.0 * Math.PI / 360.0; 
-						var radius  = 1.05;
+						var radius  = (alt + 6378.137) / 6378.137;
 		 
-						cube.position.set(
-							radius*Math.sin(obTheta)*Math.cos(-theta-obPhi),
-							radius*Math.cos(obTheta),
-							radius*Math.sin(obTheta)*Math.sin(-theta-obPhi)
-						);						
+		 				if( cube != null ){
+							cube.position.set(
+								radius*Math.sin(obTheta)*Math.cos(-theta-obPhi),
+								radius*Math.cos(obTheta),
+								radius*Math.sin(obTheta)*Math.sin(-theta-obPhi)
+							);								 					
+		 				}
 					}
-				}
-				else {
-					//cube.position.set(0.0, 0.0, 0.0);
-
 				}
 
 				if( index > num-1 ){
-
 					orbitData = null;
-
-					/*
-					dataFlag = false;
-					orbitData = null;
-					index = 0;
-
-					$.getJSON(url,
-						function(json) { 
-							orbitData = json;
-							dataFlag = true;
-					    }
-					);
-					*/
 					window.location.reload();
 				}
 				
