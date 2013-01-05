@@ -33,20 +33,15 @@ div#clock {
 	margin-left: auto;
 	margin-right: auto;
 	width: 720px;
-}
-div#clock h1 {
 	color: #bbbbbb;
 	font-size: 1.6em;
-	font-family: 'Arial black', Verdana, Helvetica,
-	sans-serif;
+	font-family: 'Arial black', Verdana, Helvetica, sans-serif;
 	text-shadow: 5px 5px 5px #666666;			
 }
 div#satelite {
 	margin-left: auto;
 	margin-right: auto;
 	width: 540px;
-}
-div#satelite p {
 	color: #cc0033;
 	font-size: 0.7em;			
 }

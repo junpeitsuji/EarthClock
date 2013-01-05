@@ -5,6 +5,8 @@
 		var options = $.extend({
 			url : null,
 			params : {},
+			speed : 2.0*Math.PI / (24*60*60*1000),
+			ambient : 0x111111,
 			extraTags : {
 				clock: 'clock',
 				satelite: 'satelite'
@@ -60,7 +62,7 @@
 			light = new THREE.DirectionalLight(0xcccccc);
 			//light.position = new THREE.Vector3(0.577, 0.577, 0.577);
 			light.position = new THREE.Vector3(0, 0, 100);
-			var ambient = new THREE.AmbientLight(0x111111);
+			var ambient = new THREE.AmbientLight(options.ambient);
 			scene.add(light);
 			scene.add(ambient);
 
@@ -104,12 +106,12 @@
 				var date = new Date();
 
 				//mesh.rotation.y = 0.3 * (+date - baseTime) / 1000;
-				var theta = (+date - baseTime) * 2.0*Math.PI / (24*60*60*1000);
+				var theta = (+date - baseTime) * options.speed;
 				mesh.rotation.y = theta;
 				//cube.rotation.y = (+date - baseTime) * 2.0*3.14159265 / (60*1000);
 
 
-				var str  = '<h1>'+date+'</h1>';
+				var str  = ''+date+'';
 				if(document.getElementById(options.extraTags.clock) != null)
 					document.getElementById(options.extraTags.clock).innerHTML = str;
 

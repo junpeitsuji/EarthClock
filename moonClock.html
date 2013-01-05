@@ -9,85 +9,26 @@
 	<script src="three.min.js"></script>
 	<script src="js/Detector.js"></script>
 	<script src="js/controls/OrbitControls.js"></script>
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+	<script type="text/javascript" src="jQuery.earthClock.js"></script>
 	<script>
-
-		function threeStart(domId) {
-			if(!Detector.webgl) Detector.addGetWebGLMessage();
-
-			var glframe = document.getElementById(domId);
-
-			var width = glframe.clientWidth;
-			var height = glframe.clientHeight;  
-
-			var renderer;
-			renderer = new THREE.WebGLRenderer({ antialias:true });
-			renderer.setSize(width, height);
-			renderer.setClearColorHex(0x000000, 1);
-			glframe.appendChild(renderer.domElement);
-
-			var scene;
-			scene = new THREE.Scene();
-
-			var camera;
-			camera = new THREE.PerspectiveCamera(
-				15, width / height);
-			camera.position = new THREE.Vector3(0, 0, 8);
-			camera.lookAt(new THREE.Vector3(0, 0, 0));
-			scene.add(camera);
-
-			var light;
-			light = new THREE.DirectionalLight(0xcccccc);
-			//light.position = new THREE.Vector3(0.577, 0.577, 0.577);
-			light.position = new THREE.Vector3(0, 0, 100);
-			//var ambient = new THREE.AmbientLight(0x333333);
-			scene.add(light);
-			//scene.add(ambient);
-
-// /*
-			var geometry = new THREE.SphereGeometry(1, 32, 16);
-			var material = new THREE.MeshPhongMaterial({
-				color: 0xffffff, specular: 0xcccccc, shininess:50, ambient: 0xffffff,
-				map: THREE.ImageUtils.loadTexture('images/MoonMap.jpg') });
-			var mesh = new THREE.Mesh(geometry, material);
-			scene.add(mesh);
-// */
-			// カメラコントロールを作成
-			var controls
-			controls = new THREE.OrbitControls(camera, glframe);
-			controls.center = new THREE.Vector3(0, 0, 0);
-
-			var baseTime = +new Date(2012, 1, 1, 0, 0, 0);
-			function render() {
-				requestAnimationFrame(render);
-
-				// カメラの状態を更新
-				controls.update();
-
-				var date = new Date();
-
-				//mesh.rotation.y = 0.3 * (+date - baseTime) / 1000;
-				var theta = (+date - baseTime) * 2.0*Math.PI / (60*1000);
-				mesh.rotation.y = theta;
-				//cube.rotation.y = (+date - baseTime) * 2.0*3.14159265 / (60*1000);
-
-				var str  = '<h1>'+date+'</h1>';
-
-				document.getElementById('clock').innerHTML = str;
-				renderer.clear();  
-				renderer.render(scene, camera);
-				
-			};
-			render();
-
-			glframe.addEventListener('resize', function() {
-				renderer.setSize(width, height);
-				camera.aspect = width / height;
-				camera.updateProjectionMatrix();
-			}, false );
-		}
+	// <!--	
+		$(function(){
+			$('#canvas-frame').earthClock({ 
+				url: null,
+				speed: 2.0*Math.PI / (60*1000),
+				ambient: 0x000000,
+				image: 'images/MoonMap.jpg',
+				extraTags: {
+					clock: "clock" 
+				}
+			});
+		})
+	// -->
 	</script>
+	
 </head>
-<body style="margin:0; overflow:hidden;" onload="threeStart('canvas-frame');">
+<body style="margin:0; overflow:hidden;">
 
 <div id="header">
 	<h1><a href="./index.html">月時計</a></h1>
