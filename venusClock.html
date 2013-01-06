@@ -19,11 +19,18 @@
 				speed: 2.0*Math.PI / (60*1000),
 				ambient: 0x000000,
 				cameraDepth: 15,
-				image: 'images/VenusMap.jpg',
-				extraTags: {
-					clock: "#clock" 
-				}
+				image: 'images/VenusMap.jpg'
 			});
+
+			$("#clock").append('<p>'+(new Date())+'</p>');
+			function timeCallback() {
+				$("#clock")
+				.empty()
+				.append('<p>'+(new Date())+'</p>');
+				
+				setTimeout(timeCallback , 100);
+			}
+			setTimeout(timeCallback , 100);
 		})
 	// -->
 	</script>

@@ -25,6 +25,11 @@ div#header h1 {
 	sans-serif;
 	text-shadow: 5px 5px 5px #666666;
 }
+
+div#dialog {
+	font-size: 0.8em;
+}
+
 div#header p {
 	color: #999999;
 	font-size: 0.7em;

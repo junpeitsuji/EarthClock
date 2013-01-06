@@ -10,6 +10,10 @@
 	<script type="text/javascript" src="js/Detector.js"></script>
 	<script type="text/javascript" src="js/controls/OrbitControls.js"></script>
 	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+
+    <link rel="stylesheet" href="http://code.jquery.com/ui/1.9.2/themes/base/jquery-ui.css" />
+    <script src="http://code.jquery.com/ui/1.9.2/jquery-ui.js"></script>
+
 	<script type="text/javascript" src="jQuery.earthClock.js"></script>
 	<script>
 	// <!--	
@@ -17,11 +21,46 @@
 			$('#canvas-frame').earthClock({ 
 				url: 'http://tsujimotter.info/api/SateliteTracker/orbitjsonp.cgi?callback=?',
 				image: 'images/earth.jpg',
-				extraTags: {
-					satelite: "#satelite", 
-					clock: "#clock" 
+				updatedCallback: function(orbitData) {
+					// /*
+					var lat = parseFloat(orbitData.latitude).toFixed(6);
+					var lng = parseFloat(orbitData.longitude).toFixed(6);
+					var alt = parseFloat(orbitData.altitude).toFixed(6);
+
+					var str = "";
+					str += '<p>'+orbitData.sateliteName+' ';
+					str += '[date: '+orbitData.date+', latitude: '+lat+', longitude: '+lng+', altitude: '+alt+'] </p>';
+
+					$("#satelite").empty()
+					.append(str);	
+					$("#satelite > *").css("display", "none").fadeIn("slow");
+					// */
+				},
+				loadedCallback: function(orbitData) {
+					$( "#dialog" )
+					.append('<p>'+orbitData.sateliteName+'</p>')
+					.append('<p>'+orbitData.tleLine1+'</p>')
+					.append('<p>'+orbitData.tleLine2+'</p>')
+					.dialog({title: "loaded", width: 400, show: "fade", hide: "fade"});
+					
+					setTimeout(function(){
+						$( "#dialog" ).dialog( "close" );
+					} , 3000);
 				}
 			});
+
+			// /*
+
+			$("#clock").append('<p>'+(new Date())+'</p>');
+			function timeCallback() {
+				$("#clock")
+				.empty()
+				.append('<p>'+(new Date())+'</p>');
+				
+				setTimeout(timeCallback , 100);
+			}
+			setTimeout(timeCallback , 100);
+			// */
 		})
 	// -->
 	</script>
@@ -41,5 +80,7 @@
 	<p>テクスチャ画像素材: Tom Patterson, <a href="http://www.shadedrelief.com">www.shadedrelief.com</a></p>
 	<p>制作: Junpei Tsuji (twitter: <a href="https://twitter.com/tsujimotter">@tsujimotter</a>)</p>
 </div>
+<div id="dialog"></div>
+
 </body>
 </html>

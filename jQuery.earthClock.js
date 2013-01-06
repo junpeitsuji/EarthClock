@@ -8,11 +8,13 @@
 			speed : 2.0*Math.PI / (24*60*60*1000),
 			ambient : 0x111111,
 			cameraDepth : 8,
-			extraTags : {
-				clock: '#clock',
-				satelite: '#satelite'
+			image : null,
+			loadedCallback : function(orbitsData){
+				console.log("orbits: "+orbitsData);
 			},
-			image : null
+			updatedCallback : function(orbitData){
+				console.log("orbit: "+orbitData);
+			}
 		},argments);
 
 		//var dataFlag = false;
@@ -21,8 +23,6 @@
 
 			var orbitData = null;
 			var index = 0;
-			//orbitData = null;
-			//index = 0;
 
 			if( options.url != null )
 			{
@@ -30,7 +30,8 @@
 					options.params,
 					function(data) { 
 						orbitData = data;
-						//dataFlag = true;
+
+						options.loadedCallback(orbitData);
 					}
 				);				
 			}
@@ -109,12 +110,6 @@
 				mesh.rotation.y = theta;
 				//cube.rotation.y = (+date - baseTime) * 2.0*3.14159265 / (60*1000);
 
-
-				var str  = '<p>'+date+'</p>';
-				$(options.extraTags.clock)
-				.empty()
-				.append(str);
-
 				if( orbitData != null ){
 
 					var orbit = orbitData.orbits[index];
@@ -139,13 +134,9 @@
 								lng  = parseFloat(orbit.longitude);
 								alt  = parseFloat(orbit.altitude);
 
-								var str = "";
-								str += '<p>'+orbitData.sateliteName+' ';
-								str += '[date: '+date+', latitude: '+lat.toFixed(6)+', longitude: '+lng.toFixed(6)+', altitude: '+alt.toFixed(6)+'] </p>';
-
-								$(options.extraTags.satelite).empty();
-								$(options.extraTags.satelite).append(str);	
-								$(options.extraTags.satelite+" > *").css("display", "none").fadeIn("slow");
+								var orbitCopy = orbit;
+								orbitCopy.sateliteName = orbitData.sateliteName;
+								options.updatedCallback(orbit);
 								
 							}
 
@@ -218,7 +209,7 @@
 					orbitData = null;
 					window.location.reload();
 				}
-
+				
 				renderer.clear();  
 				renderer.render(scene, camera);
 				

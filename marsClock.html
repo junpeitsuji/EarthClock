@@ -19,11 +19,19 @@
 				speed: 2.0*Math.PI / (60*1000),
 				ambient: 0x000000,
 				cameraDepth: 12,
-				image: 'images/MarsMap.jpg',
-				extraTags: {
-					clock: "#clock" 
-				}
+				image: 'images/MarsMap.jpg'
 			});
+
+			$("#clock").append('<p>'+(new Date())+'</p>');
+			function timeCallback() {
+				$("#clock")
+				.empty()
+				.append('<p>'+(new Date())+'</p>');
+				
+				setTimeout(timeCallback , 100);
+			}
+			setTimeout(timeCallback , 100);
+
 		})
 	// -->
 	</script>
