@@ -7,9 +7,10 @@
 			params : {},
 			speed : 2.0*Math.PI / (24*60*60*1000),
 			ambient : 0x111111,
+			cameraDepth : 8,
 			extraTags : {
-				clock: 'clock',
-				satelite: 'satelite'
+				clock: '#clock',
+				satelite: '#satelite'
 			},
 			image : null
 		},argments);
@@ -17,7 +18,6 @@
 		//var dataFlag = false;
 
 		return this.each(function(){
-		//function init(domId) {
 
 			var orbitData = null;
 			var index = 0;
@@ -54,7 +54,7 @@
 			var camera;
 			camera = new THREE.PerspectiveCamera(
 				15, width / height);
-			camera.position = new THREE.Vector3(0, 0, 8);
+			camera.position = new THREE.Vector3(0, 0, options.cameraDepth);
 			camera.lookAt(new THREE.Vector3(0, 0, 0));
 			scene.add(camera);
 
@@ -95,7 +95,6 @@
 			var cube = null;			
 			var lines = null;
 
-
 			function render() {
 
 				requestAnimationFrame(render);
@@ -111,9 +110,10 @@
 				//cube.rotation.y = (+date - baseTime) * 2.0*3.14159265 / (60*1000);
 
 
-				var str  = ''+date+'';
-				if(document.getElementById(options.extraTags.clock) != null)
-					document.getElementById(options.extraTags.clock).innerHTML = str;
+				var str  = '<p>'+date+'</p>';
+				$(options.extraTags.clock)
+				.empty()
+				.append(str);
 
 				if( orbitData != null ){
 
@@ -130,12 +130,10 @@
 							prevDate = date;
 
 							var num = parseInt(orbitData.dataNum);
-							//index = (index+1)%num;
 							index = index + 1; 
 
 							if( orbit != null ){
-								//document.getElementById('content').innerHTML 
-								//	= '<p>lat: '+orbit.latitude+', lng: '+orbit.longitude+'</p>';
+
 								date = orbit.date;
 								lat  = parseFloat(orbit.latitude);
 								lng  = parseFloat(orbit.longitude);
@@ -144,9 +142,11 @@
 								var str = "";
 								str += '<p>'+orbitData.sateliteName+' ';
 								str += '[date: '+date+', latitude: '+lat.toFixed(6)+', longitude: '+lng.toFixed(6)+', altitude: '+alt.toFixed(6)+'] </p>';
-								if(document.getElementById(options.extraTags.satelite) != null)
-									document.getElementById(options.extraTags.satelite).innerHTML = str;
 
+								$(options.extraTags.satelite).empty();
+								$(options.extraTags.satelite).append(str);	
+								$(options.extraTags.satelite+" > *").css("display", "none").fadeIn("slow");
+								
 							}
 
 							if( cube == null )
@@ -231,13 +231,7 @@
 				camera.aspect = width / height;
 				camera.updateProjectionMatrix();
 			}, false );
-/*
-			glframe.resize( function() {
-				renderer.setSize(width, height);
-				camera.aspect = width / height;
-				camera.updateProjectionMatrix();
-			} );
-*/
+			
 		});
 
 	}

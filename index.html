@@ -5,26 +5,55 @@
 		<title>惑星時計</title>
 
 	<link rel="stylesheet" type="text/css" href="css/top.css">
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+	<script type="text/javascript">
+	// <!--
+		$(function(){
+			$('#left-top').fadeIn(3000);
+
+			setTimeout( function() {
+				$('#right-top').fadeIn(3000);
+				
+				setTimeout( function() {
+					$('#left-bottom').fadeIn(3000);
+
+					setTimeout( function() {
+						$('#right-bottom').fadeIn(3000);
+
+						setTimeout( function() {
+							$('*').fadeIn(3000);
+						
+						}, 1000);
+					
+					}, 500);
+				
+				}, 500);
+					
+			}, 500);
+		})
+
+	// -->
+	</script>
 
 </head>
 <body>
 
-<div id="header">
-	<h1>惑星時計</h1>
-	<p>「惑星時計」はブラウザ上で回転する惑星儀です。（ブラウザはChrome推奨）</p>
+<div id="header" style="height:90px;">
+	<h1 style="display:none;">惑星時計</h1>
+	<p style="display:none;">「惑星時計」はブラウザ上で回転する惑星儀です。（ブラウザはChrome推奨）</p>
 </div>
 
 <div id="content">
-<div id="left-top" class="box"><div id="earth" class="canvas"><a href="earthClock.html" title="地球時計"><img src="images/earth.png"></img></a></div></div>
+<div id="left-top" class="box" style="display:none;"><div id="earth" class="canvas"><a href="earthClock.html" title="地球時計"><img src="images/earth.png"></img></a></div></div>
 
-<div id="right-top" class="box"><div id="moon" class="canvas"><a href="moonClock.html" title="月時計"><img src="images/moon.png"></img></a></div></div>
+<div id="right-top" class="box" style="display:none;"><div id="moon" class="canvas"><a href="moonClock.html" title="月時計"><img src="images/moon.png"></img></a></div></div>
 
-<div id="left-bottom" class="box"><div id="mars" class="canvas"><a href="marsClock.html" title="火星時計"><img src="images/mars.png"></img></a></div></div>
+<div id="left-bottom" class="box" style="display:none;"><div id="mars" class="canvas"><a href="marsClock.html" title="火星時計"><img src="images/mars.png"></img></a></div></div>
 
-<div id="right-bottom" class="box"><div id="venus" class="canvas"><a href="venusClock.html" title="金星時計"><img src="images/venus.png"></img></a></div></div>
+<div id="right-bottom" class="box" style="display:none;"><div id="venus" class="canvas"><a href="venusClock.html" title="金星時計"><img src="images/venus.png"></img></a></div></div>
 </div>
 
-<div id="footer">
+<div id="footer" style="display:none;">
 	<p>衛星の座標は<a href="http://spaceflight.nasa.gov/realdata/elements/index.html">spaceflight.nasa.gov</a>より取得したTLEに基づいてSGP4によって計算されています(データ取得APIは<a href="http://tsujimotter.info/api/SateliteTracker/orbitjsonp.cgi?callback=jsonp.handler">こちら</a>)。</p>
 	<p>TLEの情報は最新とは限らないため、実際の座標と一致することを保証するものではありません。<p>
 	<p>テクスチャ画像素材: Tom Patterson, <a href="http://www.shadedrelief.com">www.shadedrelief.com</a></p>

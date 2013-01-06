@@ -10,7 +10,7 @@
 	<script src="js/Detector.js"></script>
 	<script src="js/controls/OrbitControls.js"></script>
 	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
-	<script type="text/javascript" src="jQuery.earthClock.js"></script>
+	<script type="text/javascript" src="http://tsujimotter.info/planets/jQuery.earthClock.js"></script>
 	<script>
 	// <!--	
 		$(function(){
@@ -18,9 +18,10 @@
 				url: null,
 				speed: 2.0*Math.PI / (60*1000),
 				ambient: 0x000000,
+				cameraDepth: 15,
 				image: 'images/MoonMap.jpg',
 				extraTags: {
-					clock: "clock" 
+					clock: "#clock" 
 				}
 			});
 		})
@@ -38,9 +39,6 @@
 <div id="canvas-frame"></div>
 
 <div id="footer">
-	<p>参考WebサイトURL：Webグラフィックをハックする（5）多彩な表現力のWebGLを扱いやすくする「Three.js」,  
-		<a href="http://www.atmarkit.co.jp/fwcr/design/benkyo/webgraphics05/01.html">http://www.atmarkit.co.jp/fwcr/design/benkyo/webgraphics05/01.html</a>
-	</p>
 	<p>テクスチャ画像素材: Tom Patterson, <a href="http://www.shadedrelief.com">www.shadedrelief.com</a></p>
 	<p>制作: Junpei Tsuji (twitter: <a href="https://twitter.com/tsujimotter">@tsujimotter</a>)</p>
 </div>
